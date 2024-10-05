@@ -37,7 +37,6 @@ def load_model():
 
     return voting_clf, scaler
 
-
 # Function to make predictions
 def predict(input_data, voting_clf, scaler):
     # Transform the input data using the scaler
@@ -46,7 +45,6 @@ def predict(input_data, voting_clf, scaler):
     prediction = voting_clf.predict(scaled_data)
     probability = voting_clf.predict_proba(scaled_data)
     return prediction, probability
-
 
 # Function to generate LIME explanation
 def lime_explanation(instance, X_train_scaled, voting_clf, feature_names, class_names):
@@ -69,7 +67,6 @@ def lime_explanation(instance, X_train_scaled, voting_clf, feature_names, class_
     # Generate and return the explanation figure
     fig = explanation.as_pyplot_figure()
     return fig
-
 
 # Streamlit UI
 st.title('Student Dropout Prediction with LIME Explanation')
@@ -161,7 +158,10 @@ if voting_clf is not None and scaler is not None:
                 # Convert predicted class (0 or 1) to "Dropout" or "Graduate"
                 predicted_class_label = classes_dataset[int(prediction[0])]
                 st.success(f'**Predicted Class:** {predicted_class_label}')
-                st.info(f'**Prediction Probabilities:** {dict(zip(classes_dataset, probability[0]))}')
+
+                # Convert np.float64 to native Python floats
+                probability_dict = {class_name: float(prob) for class_name, prob in zip(classes_dataset, probability[0])}
+                st.info(f'**Prediction Probabilities:** {probability_dict}')
 
                 # Generate LIME explanation
                 instance = input_data.values[0]  # Select the instance to explain
@@ -185,7 +185,7 @@ if voting_clf is not None and scaler is not None:
                             try:
                                 fig = lime_explanation(scaled_instance, X_train_scaled, voting_clf, feature_names, class_names)
                                 st.pyplot(fig)
-                                st.info(f'LIME explanation for this code: Predicted Class: {predicted_class_label}')
+                                st.info(f'LIME explanation')
                             except Exception as e:
                                 st.error(f"Error generating LIME explanation: {e}")
         else:
@@ -195,20 +195,20 @@ if voting_clf is not None and scaler is not None:
 
 # Add Footer with Copyright
 st.markdown(""" 
-    <style>
-    .footer {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        background-color: #f1f1f1;
-        color: #333333;
-        text-align: center;
-        padding: 10px;
-        font-size: 12px;
-    }
-    </style>
-    <div class="footer">
-        &copy; 2024 Rakib Hossen, Sabbir Ahmed, MD. Zunead Abedin Eidmum
-    </div>
+    <style> 
+    .footer { 
+        position: fixed; 
+        left: 0; 
+        bottom: 0; 
+        width: 100%; 
+        background-color: #f1f1f1; 
+        color: #333333; 
+        text-align: center; 
+        padding: 10px; 
+        font-size: 12px; 
+    } 
+    </style> 
+    <div class="footer"> 
+        &copy; 2024 Rakib Hossen, Sabbir Ahmed, MD. Zunead Abedin Eidmum 
+    </div> 
     """, unsafe_allow_html=True)
