@@ -14,7 +14,6 @@ st.set_page_config(
 
 classes_dataset = ['Dropout', "Graduate"]
 
-
 # Load the saved model and scaler with error handling
 @st.cache_resource
 def load_model():
@@ -82,7 +81,6 @@ if voting_clf is not None and scaler is not None:
     # User input
     st.header('Enter Student Data')
 
-
     def get_float_input(label, min_value=None, max_value=None, default='0'):
         user_input = st.text_input(label, value=default)
         if user_input:
@@ -102,17 +100,12 @@ if voting_clf is not None and scaler is not None:
             except ValueError:
                 return None
 
-
     # Replace st.number_input with get_float_input and set initial value to '0'
     GDP = get_float_input('GDP', min_value=0.0, max_value=10.0, default='0.0')
-    cu_2nd_sem_eval = get_float_input('Curricular units 2nd sem (evaluations)', min_value=0.0, max_value=20.0,
-                                      default='0.0')
-    cu_2nd_sem_approved = get_float_input('Curricular units 2nd sem (approved)', min_value=0.0, max_value=20.0,
-                                          default='0.0')
-    cu_1st_sem_eval = get_float_input('Curricular units 1st sem (evaluations)', min_value=0.0, max_value=20.0,
-                                      default='0.0')
-    cu_1st_sem_approved = get_float_input('Curricular units 1st sem (approved)', min_value=0.0, max_value=20.0,
-                                          default='0.0')
+    cu_2nd_sem_eval = get_float_input('Curricular units 2nd sem (evaluations)', min_value=0.0, max_value=20.0, default='0.0')
+    cu_2nd_sem_approved = get_float_input('Curricular units 2nd sem (approved)', min_value=0.0, max_value=20.0, default='0.0')
+    cu_1st_sem_eval = get_float_input('Curricular units 1st sem (evaluations)', min_value=0.0, max_value=20.0, default='0.0')
+    cu_1st_sem_approved = get_float_input('Curricular units 1st sem (approved)', min_value=0.0, max_value=20.0, default='0.0')
 
     debtor = st.selectbox('Debtor', [0, 1])
     gender = st.selectbox('Gender', [0, 1])
@@ -138,7 +131,6 @@ if voting_clf is not None and scaler is not None:
             'Tuition fees up to date': [fees_up_to_date]
         })
 
-
         # Load training data and feature names for LIME
         @st.cache_data
         def load_training_data():
@@ -154,7 +146,6 @@ if voting_clf is not None and scaler is not None:
                 st.error(f"Error loading training data: {e}")
                 return None
 
-
         X_train = load_training_data()
 
         if X_train is not None:
@@ -166,7 +157,7 @@ if voting_clf is not None and scaler is not None:
                 with st.spinner('Making prediction...'):
                     prediction, probability = predict(input_data, voting_clf, scaler)
                 predicted_class = class_names[int(prediction[0])]
-
+                
                 # Convert predicted class (0 or 1) to "Dropout" or "Graduate"
                 predicted_class_label = classes_dataset[int(prediction[0])]
                 st.success(f'**Predicted Class:** {predicted_class_label}')
@@ -192,8 +183,7 @@ if voting_clf is not None and scaler is not None:
                     if X_train_scaled is not None:
                         with st.spinner('Generating LIME explanation...'):
                             try:
-                                fig = lime_explanation(scaled_instance, X_train_scaled, voting_clf, feature_names,
-                                                       class_names)
+                                fig = lime_explanation(scaled_instance, X_train_scaled, voting_clf, feature_names, class_names)
                                 st.pyplot(fig)
                                 st.info(f'LIME explanation for this code: Predicted Class: {predicted_class_label}')
                             except Exception as e:
@@ -204,7 +194,7 @@ if voting_clf is not None and scaler is not None:
         st.warning("Please fill in all the required numeric fields with valid numbers.")
 
 # Add Footer with Copyright
-st.markdown("""
+st.markdown(""" 
     <style>
     .footer {
         position: fixed;
