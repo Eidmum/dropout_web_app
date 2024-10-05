@@ -214,6 +214,6 @@ st.markdown("""
     }
     </style>
     <div class="footer">
-        &copy; 2024 Rakib, Hossen, Sabbir Ahmed, MD. Zunead Abedin Eidmum
+        &copy; 2024 Rakib Hossen, Sabbir Ahmed, MD. Zunead Abedin Eidmum
     </div>
     """, unsafe_allow_html=True)
