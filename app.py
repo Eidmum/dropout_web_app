@@ -12,7 +12,9 @@ st.set_page_config(
     initial_sidebar_state="auto",
 )
 
-classes_dataset=['Dropout',"Graduate"]
+classes_dataset = ['Dropout', "Graduate"]
+
+
 # Load the saved model and scaler with error handling
 @st.cache_resource
 def load_model():
@@ -120,8 +122,7 @@ if voting_clf is not None and scaler is not None:
     fees_up_to_date = st.selectbox('Tuition fees up to date', [0, 1])
 
     # Check if all float inputs are valid
-    float_inputs = [GDP, cu_2nd_sem_eval, cu_2nd_sem_approved, cu_1st_sem_eval,
-                    cu_1st_sem_approved, scholarship]
+    float_inputs = [GDP, cu_2nd_sem_eval, cu_2nd_sem_approved, cu_1st_sem_eval, cu_1st_sem_approved, scholarship]
     if all(input_val is not None for input_val in float_inputs):
         # Convert inputs into a DataFrame
         input_data = pd.DataFrame({
@@ -165,8 +166,11 @@ if voting_clf is not None and scaler is not None:
                 with st.spinner('Making prediction...'):
                     prediction, probability = predict(input_data, voting_clf, scaler)
                 predicted_class = class_names[int(prediction[0])]
-                st.success(f'**Predicted Class:** {classes_dataset[int(predicted_class)]}')
-                st.info(f'**Prediction Probabilities:** {dict(zip(class_names, probability[0]))}')
+
+                # Convert predicted class (0 or 1) to "Dropout" or "Graduate"
+                predicted_class_label = classes_dataset[int(prediction[0])]
+                st.success(f'**Predicted Class:** {predicted_class_label}')
+                st.info(f'**Prediction Probabilities:** {dict(zip(classes_dataset, probability[0]))}')
 
                 # Generate LIME explanation
                 instance = input_data.values[0]  # Select the instance to explain
@@ -191,6 +195,7 @@ if voting_clf is not None and scaler is not None:
                                 fig = lime_explanation(scaled_instance, X_train_scaled, voting_clf, feature_names,
                                                        class_names)
                                 st.pyplot(fig)
+                                st.info(f'LIME explanation for this code: Predicted Class: {predicted_class_label}')
                             except Exception as e:
                                 st.error(f"Error generating LIME explanation: {e}")
         else:
