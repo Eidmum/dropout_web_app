@@ -66,6 +66,7 @@ def lime_explanation(instance, X_train_scaled, voting_clf, feature_names, class_
 
     # Generate and return the explanation figure
     fig = explanation.as_pyplot_figure()
+    fig.axes[0].set_title('')
     return fig
 
 # Streamlit UI
